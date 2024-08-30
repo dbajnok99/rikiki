@@ -1,4 +1,3 @@
-import { RootState } from "@/app/store";
 import { player } from "@/screens/global.types";
 import {
   TextField,
@@ -17,38 +16,42 @@ import {
 } from "./GameSlice";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { game } from "../global.types";
 
 const PlayersDialog = ({
   open,
   setOpen,
   correct,
+  game,
 }: {
   open: boolean;
   setOpen: any;
   correct: boolean;
+  game: game;
 }) => {
   const dispatch = useDispatch();
-  const { gameId, players, rounds } = useSelector(
-    (state: RootState) => state.Game
-  );
 
   const handleClose = () => {
     setOpen(false);
     dispatch(
-      storeUpdateGame({ gameId: gameId, players: players, rounds: rounds })
+      storeUpdateGame({
+        gameId: game.gameId,
+        players: game.players,
+        rounds: game.rounds,
+      })
     );
   };
 
   const getHighestPlayerId = () => {
-    return players.length != 0
-      ? players.reduce((max, player) => {
+    return game.players.length != 0
+      ? game.players.reduce((max, player) => {
           return player.playerId > max.playerId ? player : max;
-        }, players[0]).playerId + 1
+        }, game.players[0]).playerId + 1
       : 2;
   };
 
   const newLine = () => {
-    if (players.length == 0) {
+    if (game.players.length == 0) {
       dispatch(
         storeNewPlayer({
           playerId: 1,
@@ -67,15 +70,9 @@ const PlayersDialog = ({
   };
 
   const deleteLine = (id: number) => {
-    if (players.length > 0) {
+    if (game.players.length > 0) {
       dispatch(storeDeletePlayer(id));
     }
-  };
-
-  const changeName = ({ id, name }: { id: number; name: string }) => {
-    dispatch(
-      storeChangePlayerData({ playerId: id, playerName: name, score: 0 })
-    );
   };
 
   const InputLine = ({ player, index }: { player: player; index: number }) => {
@@ -106,7 +103,7 @@ const PlayersDialog = ({
           aria-label="törlés"
           color="error"
           onClick={() => deleteLine(player.playerId)}
-          disabled={players.length < 2}
+          disabled={game.players.length < 2}
         >
           <DeleteForeverIcon />
         </IconButton>
@@ -124,7 +121,7 @@ const PlayersDialog = ({
       >
         <DialogTitle>Új játék kezdése</DialogTitle>
         Játékosok hozzáadása:
-        {players.length == 0 ? (
+        {game.players.length == 0 ? (
           <div key={0}>
             <InputLine
               player={{ playerId: 1, playerName: "", score: 0 }}
@@ -134,7 +131,7 @@ const PlayersDialog = ({
         ) : (
           <></>
         )}
-        {players.map((player, index) => (
+        {game.players.map((player, index) => (
           <div key={index}>
             <InputLine player={player} index={index} />
           </div>
