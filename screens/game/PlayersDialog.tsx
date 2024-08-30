@@ -96,9 +96,6 @@ const PlayersDialog = ({
             )
           }
         />
-        <IconButton aria-label="új hátékos" color="success" onClick={newLine}>
-          <AddOutlinedIcon />
-        </IconButton>
         <IconButton
           aria-label="törlés"
           color="error"
@@ -136,6 +133,15 @@ const PlayersDialog = ({
             <InputLine player={player} index={index} />
           </div>
         ))}
+        <Button
+          variant="outlined"
+          color="success"
+          onClick={newLine}
+          startIcon={<AddOutlinedIcon />}
+        >
+          Új játékos
+        </Button>
+        <br />
         <Button variant="contained" onClick={handleClose} disabled={!correct}>
           Mentés
         </Button>
