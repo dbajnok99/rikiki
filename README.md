@@ -1,1 +1,1 @@
-This is a Rikiki score counter app hosted on [rikiki.dbajnok.hu](https://www.rikiki.dbajnok.hu/){:target="_blank"}.
+This is a Rikiki score counter app hosted on <a href="https://www.rikiki.dbajnok.hu/" target="_blank">rikiki.dbajnok.hu</a>.
