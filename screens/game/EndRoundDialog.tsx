@@ -32,9 +32,7 @@ const EndRoundDialog = ({
             roundId: game.currentRound,
           });
           const [value, setValue] = useState(
-            game.currentRound
-              ? game.rounds[roundIndex][player.playerId].result
-              : 0
+            game.rounds[roundIndex][player.playerId].result
           );
           return (
             <div key={"guess_" + index}>
@@ -63,10 +61,9 @@ const EndRoundDialog = ({
           onClick={() => {
             setOpen(false);
             dispatch(storeGameStateChange("end of round"));
-            //dispatch(storeUpdateScores())
           }}
         >
-          Mentés
+          Befejezés
         </Button>
       </div>
     </Dialog>

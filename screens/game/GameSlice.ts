@@ -20,6 +20,8 @@ const GameSlice = createSlice({
       state.gameId = payload.gameId;
       state.players = payload.players;
       state.rounds = payload.rounds;
+      state.state = payload.state;
+      state.currentRound = payload.currentRound;
     },
     storeGameStateChange: (state, { payload }: PayloadAction<gameState>) => {
       state.state = payload;

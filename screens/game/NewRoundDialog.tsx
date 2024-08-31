@@ -31,10 +31,11 @@ const NewRoundDialog = ({
           var roundIndex = findIndex(game.rounds, {
             roundId: game.currentRound,
           });
+          console.log(game.rounds[roundIndex][player.playerId].guess);
           const [value, setValue] = useState(
-            game.currentRound
+            roundIndex > 0
               ? game.rounds[roundIndex][player.playerId].guess
-              : 0
+              : undefined
           );
           return (
             <div key={"guess_" + index}>

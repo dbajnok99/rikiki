@@ -68,8 +68,8 @@ const GamePageLayout = () => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpenNewRoundDialog(true);
               dispatch(storeNewRound((currentRound || 0) + 1));
+              setOpenNewRoundDialog(true);
             }}
           >
             Új kör
