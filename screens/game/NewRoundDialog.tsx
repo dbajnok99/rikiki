@@ -31,7 +31,6 @@ const NewRoundDialog = ({
           var roundIndex = findIndex(game.rounds, {
             roundId: game.currentRound,
           });
-          console.log(game.rounds[roundIndex][player.playerId].guess);
           const [value, setValue] = useState(
             roundIndex > 0
               ? game.rounds[roundIndex][player.playerId].guess
