@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { game, player } from "../global.types";
+import { game, gameState, player, round } from "../global.types";
 import { filter, findIndex } from "lodash";
 const initialState: game = {
   gameId: 0,
   players: [],
   rounds: [],
+  state: "setup",
+  currentRound: undefined,
 };
 
 const GameSlice = createSlice({
@@ -18,6 +20,9 @@ const GameSlice = createSlice({
       state.gameId = payload.gameId;
       state.players = payload.players;
       state.rounds = payload.rounds;
+    },
+    storeGameStateChange: (state, { payload }: PayloadAction<gameState>) => {
+      state.state = payload;
     },
     storePlayers: (state, { payload }: PayloadAction<player[]>) => {
       state.players = payload;
@@ -34,6 +39,34 @@ const GameSlice = createSlice({
       var index = findIndex(state.players, { playerId: payload.playerId });
       state.players.splice(index, 1, payload);
     },
+    storeNewRound: (state, { payload }: PayloadAction<number>) => {
+      state.rounds.push({ roundId: payload });
+      var index = findIndex(state.rounds, { roundId: payload });
+      state.players.forEach((player) => {
+        state.rounds[index][player.playerId] = {
+          guess: undefined,
+          result: undefined,
+        };
+      });
+      state.currentRound = payload;
+    },
+    storeRoundChanges: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        roundId: number;
+        playerId: number;
+        guess?: number;
+        result?: number;
+      }>
+    ) => {
+      var index = findIndex(state.rounds, { roundId: payload.roundId });
+      if (payload.guess)
+        state.rounds[index][payload.playerId].guess = payload.guess;
+      if (payload.result)
+        state.rounds[index][payload.playerId].result = payload.result;
+    },
   },
 });
 
@@ -44,6 +77,9 @@ export const {
   storeNewPlayer,
   storeDeletePlayer,
   storeChangePlayerData,
+  storeRoundChanges,
+  storeNewRound,
+  storeGameStateChange,
 } = GameSlice.actions;
 
 export default GameSlice.reducer;

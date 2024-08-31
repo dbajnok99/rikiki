@@ -5,7 +5,7 @@ import { storeGameStateChange, storeRoundChanges } from "./GameSlice";
 import { useDispatch } from "react-redux";
 import { findIndex } from "lodash";
 
-const NewRoundDialog = ({
+const EndRoundDialog = ({
   open,
   setOpen,
   game,
@@ -25,22 +25,22 @@ const NewRoundDialog = ({
           alignContent: "center",
         }}
       >
-        <DialogTitle>Új kör</DialogTitle>
-        Kérlek add meg mindenki tippjét:
+        <DialogTitle>Kör vége</DialogTitle>
+        Kérlek add meg mindenki eredményét:
         {game.players.map((player, index) => {
           var roundIndex = findIndex(game.rounds, {
             roundId: game.currentRound,
           });
           const [value, setValue] = useState(
             game.currentRound
-              ? game.rounds[roundIndex][player.playerId].guess
+              ? game.rounds[roundIndex][player.playerId].result
               : 0
           );
           return (
             <div key={"guess_" + index}>
               {player.playerName}:
               <TextField
-                label="Tipp"
+                label="Eredmény"
                 variant="outlined"
                 type="number"
                 value={value}
@@ -50,7 +50,7 @@ const NewRoundDialog = ({
                     storeRoundChanges({
                       roundId: game.currentRound || 1,
                       playerId: player.playerId,
-                      guess: Number(e.target.value),
+                      result: Number(e.target.value),
                     })
                   );
                 }}
@@ -62,7 +62,8 @@ const NewRoundDialog = ({
           variant="contained"
           onClick={() => {
             setOpen(false);
-            dispatch(storeGameStateChange("playing"));
+            dispatch(storeGameStateChange("end of round"));
+            //dispatch(storeUpdateScores())
           }}
         >
           Mentés
@@ -72,4 +73,4 @@ const NewRoundDialog = ({
   );
 };
 
-export default NewRoundDialog;
+export default EndRoundDialog;

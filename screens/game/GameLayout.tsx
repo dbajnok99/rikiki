@@ -3,14 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { Button } from "@mui/material";
 import { uniqBy } from "lodash";
-import { storeUpdateGame } from "@/screens/GlobalSlice";
 import PlayersDialog from "./PlayersDialog";
 import ScoreBoard from "./Scoreboard";
 import NewRoundDialog from "./NewRoundDialog";
+import {
+  storeGameData,
+  storeGameStateChange,
+  storeNewRound,
+} from "./GameSlice";
+import EndRoundDialog from "./EndRoundDialog";
 
 const GamePageLayout = () => {
   const dispatch = useDispatch();
-  const { gameId, players, rounds } = useSelector(
+  const { gameId, players, rounds, currentRound, state } = useSelector(
     (state: RootState) => state.Game
   );
 
@@ -26,33 +31,76 @@ const GamePageLayout = () => {
 
   const [openEditDialog, setOpenEditDialog] = useState(!checkIfCorrect());
   const [openNewRoundDialog, setOpenNewRoundDialog] = useState(false);
+  const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
-  const handleCloseEdit = () => {
-    setOpenEditDialog(false);
-    dispatch(
-      storeUpdateGame({ gameId: gameId, players: players, rounds: rounds })
-    );
+  const handleOpenNewRound = (open: boolean) => {
+    setOpenEndRoundDialog(open);
   };
 
   return (
     <main>
-      <Button variant="contained" onClick={() => setOpenEditDialog(true)}>
-        Szerkesztés
-      </Button>
-      <Button variant="contained" onClick={() => setOpenNewRoundDialog(true)}>
-        Új kör
-      </Button>
-      <PlayersDialog
-        open={openEditDialog}
-        setOpen={setOpenEditDialog}
-        correct={checkIfCorrect()}
-        game={{ gameId, players, rounds }}
-      />
-      <NewRoundDialog
-        open={openNewRoundDialog}
-        setOpen={setOpenNewRoundDialog}
-        game={{ gameId, players, rounds }}
-      />
+      {state == "setup" ? (
+        <>
+          <Button variant="contained" onClick={() => setOpenEditDialog(true)}>
+            Szerkesztés
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              dispatch(storeGameStateChange("ready to guess"));
+            }}
+          >
+            Játék kezdése
+          </Button>
+          <PlayersDialog
+            open={openEditDialog}
+            setOpen={setOpenEditDialog}
+            correct={checkIfCorrect()}
+            game={{ gameId, players, rounds }}
+          />
+        </>
+      ) : (
+        <></>
+      )}
+
+      {["ready to guess", "end of round"].includes(state || "") ? (
+        <>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpenNewRoundDialog(true);
+              dispatch(storeNewRound((currentRound || 0) + 1));
+            }}
+          >
+            Új kör
+          </Button>
+          <NewRoundDialog
+            open={openNewRoundDialog}
+            setOpen={handleOpenNewRound}
+            game={{ gameId, players, rounds, currentRound }}
+          />
+        </>
+      ) : (
+        <></>
+      )}
+
+      {state == "playing" ? (
+        <>
+          <Button
+            variant="contained"
+            onClick={() => setOpenEndRoundDialog(true)}
+          >
+            Kör befejezése
+          </Button>
+          <EndRoundDialog
+            open={openEndRoundDialog}
+            setOpen={handleOpenNewRound}
+            game={{ gameId, players, rounds, currentRound }}
+          />
+        </>
+      ) : (
+        <></>
+      )}
 
       <ScoreBoard />
     </main>

@@ -23,9 +23,19 @@ export default function Home() {
         gameId: newId,
         players: [],
         rounds: [],
+        currentRound: undefined,
+        state: "setup",
       })
     );
-    dispatch(storeGameData({ gameId: newId, players: [], rounds: [] }));
+    dispatch(
+      storeGameData({
+        gameId: newId,
+        players: [],
+        rounds: [],
+        currentRound: undefined,
+        state: "setup",
+      })
+    );
     router.push("/game");
   };
 
