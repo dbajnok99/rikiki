@@ -8,14 +8,12 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import { player, round } from "../global.types";
+import { round } from "../global.types";
 import { useSelector } from "react-redux";
 import { calculateScore, calculateScorediff } from "@/lib/functions";
 
 const ScoreBoard = () => {
-  const { gameId, players, rounds } = useSelector(
-    (state: RootState) => state.Game
-  );
+  const { players, rounds } = useSelector((state: RootState) => state.Game);
 
   const ScoreRow = ({ round }: { round: round }) => {
     return (
@@ -74,7 +72,7 @@ const ScoreBoard = () => {
 
   return (
     <TableContainer component={Paper}>
-      <Table>
+      <Table sx={{ width: "100%" }}>
         <TableHead style={{ backgroundColor: "lightgray" }}>
           <TableRow>
             <TableCell

@@ -9,10 +9,10 @@ const Standings = () => {
     <>
       {orderedPlayers.map((player, index) => {
         return (
-          <>
+          <div key={"standing_" + index}>
             {index + 1}. {player.playerName}: {player.score}
             <br />
-          </>
+          </div>
         );
       })}
     </>
