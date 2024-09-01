@@ -7,8 +7,8 @@ export const calculateScorediff = ({
   round: round;
   player: player;
 }) => {
-  const guess = round[player.playerId].guess;
-  const result = round[player.playerId].result;
+  const guess = round[player.playerId]?.guess;
+  const result = round[player.playerId]?.result;
   if (guess !== undefined && result !== undefined) {
     return guess == result
       ? 10 + guess * 2

@@ -33,8 +33,8 @@ const ScoreBoard = () => {
                   paddingInline: "5px",
                 }}
               >
-                {round[player.playerId].guess !== undefined
-                  ? "Tipp:" + round[player.playerId].guess
+                {round[player.playerId]?.guess !== undefined
+                  ? "Tipp:" + round[player.playerId]?.guess
                   : ""}
               </div>
               <div
@@ -44,8 +44,8 @@ const ScoreBoard = () => {
                   paddingInline: "5px",
                 }}
               >
-                {round[player.playerId].result !== undefined
-                  ? "Ütés:" + round[player.playerId].result
+                {round[player.playerId]?.result !== undefined
+                  ? "Ütés:" + round[player.playerId]?.result
                   : ""}
               </div>
               <div
@@ -56,8 +56,8 @@ const ScoreBoard = () => {
                   paddingInline: "5px",
                 }}
               >
-                {round[player.playerId].guess !== undefined &&
-                round[player.playerId].result !== undefined
+                {round[player.playerId]?.guess !== undefined &&
+                round[player.playerId]?.result !== undefined
                   ? scoreChange > 0
                     ? "+" + scoreChange
                     : scoreChange

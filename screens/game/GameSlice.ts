@@ -42,14 +42,17 @@ const GameSlice = createSlice({
       state.players.splice(index, 1, payload);
     },
     storeNewRound: (state, { payload }: PayloadAction<number>) => {
-      state.rounds.push({ roundId: payload });
       var index = findIndex(state.rounds, { roundId: payload });
-      state.players.forEach((player) => {
-        state.rounds[index][player.playerId] = {
-          guess: undefined,
-          result: undefined,
-        };
-      });
+      if (index < 0) {
+        state.rounds.push({ roundId: payload });
+        var index = findIndex(state.rounds, { roundId: payload });
+        state.players.forEach((player) => {
+          state.rounds[index][player.playerId] = {
+            guess: undefined,
+            result: undefined,
+          };
+        });
+      }
     },
     storeUpdateCurrentRound: (state, { payload }: PayloadAction<number>) => {
       state.currentRound = payload;

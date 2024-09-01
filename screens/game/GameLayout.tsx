@@ -37,7 +37,7 @@ const GamePageLayout = () => {
   useEffect(() => {
     dispatch(storeAutoSave({ gameId, players, rounds, currentRound, state }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRound, gameId, players, rounds, state]);
+  }, [state]);
 
   return (
     <main>
