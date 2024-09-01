@@ -15,7 +15,6 @@ const ScoreBoard = () => {
   const { gameId, players, rounds } = useSelector(
     (state: RootState) => state.Game
   );
-
   const calculateScorediff = ({
     round,
     player,
@@ -23,12 +22,19 @@ const ScoreBoard = () => {
     round: round;
     player: player;
   }) => {
-    return round[player.playerId].guess == round[player.playerId].result
-      ? 10
-      : Math.abs(
-          (round[player.playerId].guess || 0) -
-            (round[player.playerId].result || 0)
-        ) * -2;
+    if (
+      round[player.playerId].guess !== undefined &&
+      round[player.playerId].result !== undefined
+    ) {
+      return round[player.playerId].guess == round[player.playerId].result
+        ? 10
+        : Math.abs(
+            (round[player.playerId].guess || 0) -
+              (round[player.playerId].result || 0)
+          ) * -2;
+    } else {
+      return 0;
+    }
   };
 
   const ScoreRow = ({ round }: { round: round }) => {
@@ -36,7 +42,6 @@ const ScoreBoard = () => {
       <>
         {players.map((player, index) => {
           const scoreChange = calculateScorediff({ round, player });
-
           return (
             <TableCell
               align="center"
@@ -51,7 +56,8 @@ const ScoreBoard = () => {
                   paddingInline: "5px",
                 }}
               >
-                {round[player.playerId].guess && round[player.playerId].result
+                {round[player.playerId].guess !== undefined &&
+                round[player.playerId].result !== undefined
                   ? scoreChange > 0
                     ? "+" + scoreChange
                     : scoreChange
@@ -106,7 +112,10 @@ const ScoreBoard = () => {
           ))}
           <TableRow
             key={"scores"}
-            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            sx={{
+              "&:last-child td, &:last-child th": { border: 0 },
+              borderTop: "2px solid grey",
+            }}
           >
             <TableCell align="right">Pontok</TableCell>
             {players.map((player, index) => {

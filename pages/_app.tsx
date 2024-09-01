@@ -1,9 +1,9 @@
-import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import store, { persistor } from "../app/store";
 import { NextComponentType, NextPageContext } from "next";
 import Head from "next/head";
 import { PersistGate } from "redux-persist/integration/react";
+import "@/screens/style.css";
 
 function MyApp({
   Component,

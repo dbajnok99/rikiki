@@ -1,20 +1,20 @@
 import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { uniqBy } from "lodash";
 import PlayersDialog from "./PlayersDialog";
 import ScoreBoard from "./Scoreboard";
 import NewRoundDialog from "./NewRoundDialog";
-import {
-  storeGameData,
-  storeGameStateChange,
-  storeNewRound,
-} from "./GameSlice";
+import { storeGameStateChange, storeNewRound } from "./GameSlice";
 import EndRoundDialog from "./EndRoundDialog";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useRouter } from "next/router";
+import { storeAutoSave } from "../GlobalSlice";
 
 const GamePageLayout = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { gameId, players, rounds, currentRound, state } = useSelector(
     (state: RootState) => state.Game
   );
@@ -37,9 +37,22 @@ const GamePageLayout = () => {
     setOpenEndRoundDialog(open);
   };
 
+  useEffect(() => {
+    dispatch(storeAutoSave({ gameId, players, rounds, currentRound, state }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRound, gameId, players, rounds, state]);
+
   return (
     <main>
-      {state == "setup" ? (
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => router.push("/")}
+        startIcon={<ArrowBackIcon />}
+      >
+        Vissza a főoldalra
+      </Button>
+      {state == "setup" || state == undefined ? (
         <>
           <Button variant="contained" onClick={() => setOpenEditDialog(true)}>
             Szerkesztés

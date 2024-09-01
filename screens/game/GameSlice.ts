@@ -64,9 +64,9 @@ const GameSlice = createSlice({
       }>
     ) => {
       var index = findIndex(state.rounds, { roundId: payload.roundId });
-      if (payload.guess)
+      if (payload.guess !== undefined)
         state.rounds[index][payload.playerId].guess = payload.guess;
-      if (payload.result)
+      if (payload.result !== undefined)
         state.rounds[index][payload.playerId].result = payload.result;
     },
   },

@@ -12,7 +12,6 @@ import {
   REGISTER,
   REHYDRATE,
 } from "redux-persist";
-import thunk from "redux-thunk";
 
 const persistConfig = {
   key: "root",

@@ -1,0 +1,12 @@
+.previousGameDiv {
+    border-radius: 5px;
+    border: 1px solid grey;
+    margin: 5px;
+    display: inline-flex;
+    padding: 3px;
+}
+
+.previousGameDiv:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}

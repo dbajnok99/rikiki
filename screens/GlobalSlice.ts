@@ -24,10 +24,14 @@ const GlobalSlice = createSlice({
       var index = findIndex(state.games, { gameId: payload.gameId });
       state.games.splice(index, 1, payload);
     },
+    storeAutoSave: (state, { payload }: PayloadAction<game>) => {
+      var index = findIndex(state.games, { gameId: payload.gameId });
+      state.games.splice(index, 1, payload);
+    },
   },
 });
 
-export const { storeGames, storeNewGame, storeUpdateGame } =
+export const { storeGames, storeNewGame, storeUpdateGame, storeAutoSave } =
   GlobalSlice.actions;
 
 export default GlobalSlice.reducer;

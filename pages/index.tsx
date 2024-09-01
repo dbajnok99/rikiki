@@ -5,6 +5,7 @@ import { storeNewGame } from "../screens/GlobalSlice";
 import { useRouter } from "next/navigation";
 import { storeGameData } from "@/screens/game/GameSlice";
 import { player } from "@/screens/global.types";
+import { findIndex } from "lodash";
 
 export default function Home() {
   const router = useRouter();
@@ -54,12 +55,26 @@ export default function Home() {
     }
     return result;
   };
+
+  const loadGame = (id: number) => {
+    var index = findIndex(games, { gameId: id });
+    dispatch(storeGameData(games[index]));
+    router.push("/game");
+  };
+
   const PreviousGames: React.FC = () => {
     return (
-      <div>
+      <div key={"prevGames"}>
         {games.map((game, index) => (
-          <div key={index}>
-            {game.gameId}: {playerNames(game.players)}
+          <div key={"prevGameOuter_" + index}>
+            <div
+              key={"prevGameInner_" + index}
+              className="previousGameDiv"
+              onClick={() => loadGame(game.gameId)}
+            >
+              {game.gameId}: {playerNames(game.players)}
+            </div>
+            <br />
           </div>
         ))}
       </div>
