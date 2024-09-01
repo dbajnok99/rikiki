@@ -2,6 +2,7 @@ import { Button, Dialog, DialogTitle, TextField } from "@mui/material";
 import { game } from "../global.types";
 import { useState } from "react";
 import {
+  storeChangePlayerData,
   storeGameStateChange,
   storeRoundChanges,
   storeUpdateCurrentRound,
@@ -9,6 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 import { findIndex } from "lodash";
 import { player } from "../global.types";
+import { calculateScore } from "@/lib/functions";
 
 const EndRoundDialog = ({
   open,
@@ -92,6 +94,18 @@ const EndRoundDialog = ({
             setOpen(false);
             dispatch(storeGameStateChange("end of round"));
             dispatch(storeUpdateCurrentRound((game.currentRound || 0) + 1));
+            game.players.forEach((player) => {
+              dispatch(
+                storeChangePlayerData({
+                  playerId: player.playerId,
+                  playerName: player.playerName,
+                  score: calculateScore({
+                    player: player,
+                    rounds: game.rounds,
+                  }),
+                })
+              );
+            });
           }}
         >
           Befejezés

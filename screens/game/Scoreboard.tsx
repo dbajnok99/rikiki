@@ -10,28 +10,12 @@ import {
 } from "@mui/material";
 import { player, round } from "../global.types";
 import { useSelector } from "react-redux";
+import { calculateScore, calculateScorediff } from "@/lib/functions";
 
 const ScoreBoard = () => {
   const { gameId, players, rounds } = useSelector(
     (state: RootState) => state.Game
   );
-  const calculateScorediff = ({
-    round,
-    player,
-  }: {
-    round: round;
-    player: player;
-  }) => {
-    const guess = round[player.playerId].guess;
-    const result = round[player.playerId].result;
-    if (guess !== undefined && result !== undefined) {
-      return guess == result
-        ? 10 + guess * 2
-        : Math.abs((guess || 0) - (result || 0)) * -2;
-    } else {
-      return 0;
-    }
-  };
 
   const ScoreRow = ({ round }: { round: round }) => {
     return (
@@ -44,6 +28,28 @@ const ScoreBoard = () => {
               key={"rowCell" + index + "_" + player.playerId}
               style={{ border: "1px solid grey", fontWeight: "bold" }}
             >
+              <div
+                style={{
+                  borderRadius: "3px",
+                  display: "inline-block",
+                  paddingInline: "5px",
+                }}
+              >
+                {round[player.playerId].guess !== undefined
+                  ? "Tipp:" + round[player.playerId].guess
+                  : ""}
+              </div>
+              <div
+                style={{
+                  borderRadius: "3px",
+                  display: "inline-block",
+                  paddingInline: "5px",
+                }}
+              >
+                {round[player.playerId].result !== undefined
+                  ? "Ütés:" + round[player.playerId].result
+                  : ""}
+              </div>
               <div
                 style={{
                   background: scoreChange > 0 ? "lightgreen" : "#f1807e",
@@ -66,13 +72,6 @@ const ScoreBoard = () => {
     );
   };
 
-  const calculateScore = (player: player) => {
-    var result: number = 0;
-    rounds.forEach((round) => {
-      result += calculateScorediff({ round, player });
-    });
-    return result;
-  };
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -121,7 +120,7 @@ const ScoreBoard = () => {
                   key={"headerCell" + index}
                   style={{ border: "1px solid grey", fontWeight: "bold" }}
                 >
-                  {calculateScore(player)}
+                  {calculateScore({ player: player, rounds: rounds })}
                 </TableCell>
               );
             })}

@@ -11,6 +11,7 @@ import EndRoundDialog from "./EndRoundDialog";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/router";
 import { storeAutoSave } from "../GlobalSlice";
+import Standings from "./Standings";
 
 const GamePageLayout = () => {
   const dispatch = useDispatch();
@@ -115,6 +116,7 @@ const GamePageLayout = () => {
       )}
 
       <ScoreBoard />
+      <Standings />
     </main>
   );
 };
