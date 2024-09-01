@@ -48,7 +48,7 @@ const EndRoundDialog = ({
           variant="outlined"
           type="number"
           value={value}
-          InputProps={{ inputProps: { min: 0, max: 20 } }}
+          slotProps={{ input: { inputProps: { min: 0, max: 20 } } }}
           error={
             value !== undefined && (Number(value) < 0 || Number(value) > 20)
           }

@@ -113,7 +113,7 @@ const ScoreBoard = () => {
               borderTop: "2px solid grey",
             }}
           >
-            <TableCell align="right">Pontok</TableCell>
+            <TableCell align="right">Összesen</TableCell>
             {players.map((player, index) => {
               return (
                 <TableCell
