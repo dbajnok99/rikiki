@@ -44,11 +44,13 @@ const GamePageLayout = () => {
       <Button
         variant="outlined"
         color="primary"
+        style={{ margin: "6px" }}
         onClick={() => router.push("/")}
         startIcon={<ArrowBackIcon />}
       >
         Vissza a főoldalra
       </Button>
+      <br />
       {state == "setup" || state == undefined ? (
         <>
           <Button variant="contained" onClick={() => setOpenEditDialog(true)}>
@@ -56,6 +58,7 @@ const GamePageLayout = () => {
           </Button>
           <Button
             variant="contained"
+            style={{ margin: "6px" }}
             onClick={() => {
               dispatch(storeGameStateChange("ready to guess"));
               dispatch(storeNewRound(1));
@@ -78,6 +81,7 @@ const GamePageLayout = () => {
         <>
           <Button
             variant="contained"
+            style={{ margin: "6px" }}
             onClick={() => {
               if (currentRound !== undefined && currentRound > 1) {
                 dispatch(storeNewRound(currentRound));
@@ -101,6 +105,7 @@ const GamePageLayout = () => {
         <>
           <Button
             variant="contained"
+            style={{ margin: "6px" }}
             onClick={() => setOpenEndRoundDialog(true)}
           >
             Kör befejezése

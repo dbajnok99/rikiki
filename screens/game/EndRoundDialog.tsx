@@ -43,10 +43,10 @@ const EndRoundDialog = ({
         : game.rounds[roundIndex][player.playerId].result
     );
     return (
-      <div key={"guess_" + index}>
+      <div key={"guess_" + index} className="inputLine">
         {player.playerName}:
         <TextField
-          label="Eredmény"
+          label="Ütés"
           variant="outlined"
           type="number"
           value={value}
@@ -78,8 +78,10 @@ const EndRoundDialog = ({
           alignContent: "center",
         }}
       >
-        <DialogTitle>Kör vége</DialogTitle>
-        Kérlek add meg mindenki eredményét:
+        <DialogTitle align="center" variant="h3">
+          Kör vége
+        </DialogTitle>
+        Kérlek add meg ki mennyit ütött:
         {game.players.map((player, index) => {
           return (
             <div key={"resultInputLine_" + index}>
@@ -87,29 +89,33 @@ const EndRoundDialog = ({
             </div>
           );
         })}
-        <Button
-          variant="contained"
-          disabled={checkIfIncorrect()}
-          onClick={() => {
-            setOpen(false);
-            dispatch(storeGameStateChange("end of round"));
-            dispatch(storeUpdateCurrentRound((game.currentRound || 0) + 1));
-            game.players.forEach((player) => {
-              dispatch(
-                storeChangePlayerData({
-                  playerId: player.playerId,
-                  playerName: player.playerName,
-                  score: calculateScore({
-                    player: player,
-                    rounds: game.rounds,
-                  }),
-                })
-              );
-            });
-          }}
+        <div
+          style={{ display: "flex", width: "100%", justifyContent: "center" }}
         >
-          Befejezés
-        </Button>
+          <Button
+            variant="contained"
+            disabled={checkIfIncorrect()}
+            onClick={() => {
+              setOpen(false);
+              dispatch(storeGameStateChange("end of round"));
+              dispatch(storeUpdateCurrentRound((game.currentRound || 0) + 1));
+              game.players.forEach((player) => {
+                dispatch(
+                  storeChangePlayerData({
+                    playerId: player.playerId,
+                    playerName: player.playerName,
+                    score: calculateScore({
+                      player: player,
+                      rounds: game.rounds,
+                    }),
+                  })
+                );
+              });
+            }}
+          >
+            Befejezés
+          </Button>
+        </div>
       </div>
     </Dialog>
   );

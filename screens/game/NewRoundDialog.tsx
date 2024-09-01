@@ -48,7 +48,7 @@ const NewRoundDialog = ({
     );
 
     return (
-      <div key={"guess_" + index}>
+      <div key={"guess_" + index} className="inputLine">
         {player.playerName}:
         <TextField
           label="Tipp"
@@ -83,7 +83,9 @@ const NewRoundDialog = ({
           alignContent: "center",
         }}
       >
-        <DialogTitle>Új kör</DialogTitle>
+        <DialogTitle align="center" variant="h3">
+          Új kör
+        </DialogTitle>
         Kérlek add meg mindenki tippjét:
         {game.players.map((player, index) => {
           return (
@@ -92,16 +94,20 @@ const NewRoundDialog = ({
             </div>
           );
         })}
-        <Button
-          variant="contained"
-          disabled={checkIfIncorrect()}
-          onClick={() => {
-            setOpen(false);
-            dispatch(storeGameStateChange("playing"));
-          }}
+        <div
+          style={{ display: "flex", width: "100%", justifyContent: "center" }}
         >
-          Mentés
-        </Button>
+          <Button
+            variant="contained"
+            disabled={checkIfIncorrect()}
+            onClick={() => {
+              setOpen(false);
+              dispatch(storeGameStateChange("playing"));
+            }}
+          >
+            Mentés
+          </Button>
+        </div>
       </div>
     </Dialog>
   );

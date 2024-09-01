@@ -10,3 +10,10 @@
     background-color: lightgrey;
     cursor: pointer;
 }
+
+.inputLine{
+    padding: 6px;
+    display: flex; 
+    justify-content: center;
+    flex-direction: column;
+}

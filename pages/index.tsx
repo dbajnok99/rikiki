@@ -82,12 +82,14 @@ export default function Home() {
   };
   return (
     <main>
-      <Typography variant="h1">Rikiki Számláló</Typography>
-      <Button variant="contained" onClick={newGame}>
+      <Typography align="center" variant="h3" fontWeight={"bold"}>
+        Rikiki Számláló
+      </Typography>
+      <Button variant="contained" onClick={newGame} sx={{ marginBlock: "3%" }}>
         Új játék
       </Button>
       <div>
-        <Typography variant="h3">Előző játékok:</Typography>
+        <Typography>Előző játékok:</Typography>
         <PreviousGames />
       </div>
     </main>

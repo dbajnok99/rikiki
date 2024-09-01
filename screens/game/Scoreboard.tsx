@@ -24,7 +24,11 @@ const ScoreBoard = () => {
             <TableCell
               align="center"
               key={"rowCell" + index + "_" + player.playerId}
-              style={{ border: "1px solid grey", fontWeight: "bold" }}
+              style={{
+                border: "1px solid grey",
+                fontWeight: "bold",
+                padding: "6px",
+              }}
             >
               <div
                 style={{
@@ -37,6 +41,7 @@ const ScoreBoard = () => {
                   ? "Tipp:" + round[player.playerId]?.guess
                   : ""}
               </div>
+              <br />
               <div
                 style={{
                   borderRadius: "3px",
@@ -48,6 +53,7 @@ const ScoreBoard = () => {
                   ? "Ütés:" + round[player.playerId]?.result
                   : ""}
               </div>
+              <br />
               <div
                 style={{
                   background: scoreChange > 0 ? "lightgreen" : "#f1807e",
@@ -72,20 +78,28 @@ const ScoreBoard = () => {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ width: "100%" }}>
+      <Table>
         <TableHead style={{ backgroundColor: "lightgray" }}>
           <TableRow>
             <TableCell
               align="center"
               key={"headerCell"}
-              style={{ border: "1px solid grey", fontWeight: "bold" }}
+              style={{
+                border: "1px solid grey",
+                fontWeight: "bold",
+                padding: "6px",
+              }}
             ></TableCell>
             {players.map((player, index) => {
               return (
                 <TableCell
                   align="center"
                   key={"headerCell" + index}
-                  style={{ border: "1px solid grey", fontWeight: "bold" }}
+                  style={{
+                    border: "1px solid grey",
+                    fontWeight: "bold",
+                    padding: "6px",
+                  }}
                 >
                   {player.playerName}
                 </TableCell>
@@ -99,7 +113,9 @@ const ScoreBoard = () => {
               key={round.roundId}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell align="right">{round.roundId}. kör</TableCell>
+              <TableCell align="center" style={{ padding: "6px" }}>
+                {round.roundId}. kör
+              </TableCell>
               <ScoreRow round={round} />
             </TableRow>
           ))}
@@ -110,13 +126,19 @@ const ScoreBoard = () => {
               borderTop: "2px solid grey",
             }}
           >
-            <TableCell align="right">Összesen</TableCell>
+            <TableCell align="center" style={{ padding: "6px" }}>
+              Összesen
+            </TableCell>
             {players.map((player, index) => {
               return (
                 <TableCell
                   align="center"
                   key={"headerCell" + index}
-                  style={{ border: "1px solid grey", fontWeight: "bold" }}
+                  style={{
+                    border: "1px solid grey",
+                    fontWeight: "bold",
+                    padding: "6px",
+                  }}
                 >
                   {calculateScore({ player: player, rounds: rounds })}
                 </TableCell>
