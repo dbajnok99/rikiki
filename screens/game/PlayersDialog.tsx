@@ -79,31 +79,38 @@ const PlayersDialog = ({
     const [value, setValue] = useState(player.playerName);
 
     return (
-      <div style={{ width: "100%", marginBlock: "5px" }} key={"test_" + index}>
+      <div
+        className="inputLine"
+        style={{ marginBlock: "5px" }}
+        key={"test_" + index}
+      >
         {index + 1 || 1}.
-        <TextField
-          label="Név"
-          variant="outlined"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={(e) =>
-            dispatch(
-              storeChangePlayerData({
-                playerId: player.playerId,
-                playerName: e.target.value,
-                score: 0,
-              })
-            )
-          }
-        />
-        <IconButton
-          aria-label="törlés"
-          color="error"
-          onClick={() => deleteLine(player.playerId)}
-          disabled={game.players.length < 2}
-        >
-          <DeleteForeverIcon />
-        </IconButton>
+        <div>
+          <TextField
+            label="Név"
+            variant="outlined"
+            style={{ width: "80%" }}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={(e) =>
+              dispatch(
+                storeChangePlayerData({
+                  playerId: player.playerId,
+                  playerName: e.target.value,
+                  score: 0,
+                })
+              )
+            }
+          />
+          <IconButton
+            aria-label="törlés"
+            color="error"
+            onClick={() => deleteLine(player.playerId)}
+            disabled={game.players.length < 2}
+          >
+            <DeleteForeverIcon />
+          </IconButton>
+        </div>
       </div>
     );
   };
@@ -116,7 +123,9 @@ const PlayersDialog = ({
           alignContent: "center",
         }}
       >
-        <DialogTitle>Új játék kezdése</DialogTitle>
+        <DialogTitle align="center" variant="h3">
+          Új játék kezdése
+        </DialogTitle>
         Játékosok hozzáadása:
         {game.players.length == 0 ? (
           <div key={0}>
@@ -138,13 +147,18 @@ const PlayersDialog = ({
           color="success"
           onClick={newLine}
           startIcon={<AddOutlinedIcon />}
+          style={{ margin: "6px" }}
         >
           Új játékos
         </Button>
         <br />
-        <Button variant="contained" onClick={handleClose} disabled={!correct}>
-          Mentés
-        </Button>
+        <div
+          style={{ display: "flex", width: "100%", justifyContent: "center" }}
+        >
+          <Button variant="contained" onClick={handleClose} disabled={!correct}>
+            Mentés
+          </Button>
+        </div>
       </div>
     </Dialog>
   );
