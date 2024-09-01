@@ -44,7 +44,7 @@ const EndRoundDialog = ({
     );
     return (
       <div key={"guess_" + index} className="inputLine">
-        {player.playerName}:
+        <div style={{ marginBottom: "6px" }}>{player.playerName}:</div>
         <TextField
           label="Ütés"
           variant="outlined"
@@ -76,6 +76,7 @@ const EndRoundDialog = ({
           padding: "20px",
           justifyContent: "center",
           alignContent: "center",
+          overflow: "auto",
         }}
       >
         <DialogTitle align="center" variant="h3">

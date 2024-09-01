@@ -26,7 +26,6 @@ const ScoreBoard = () => {
               key={"rowCell" + index + "_" + player.playerId}
               style={{
                 border: "1px solid grey",
-                fontWeight: "bold",
                 padding: "6px",
               }}
             >
@@ -60,6 +59,7 @@ const ScoreBoard = () => {
                   borderRadius: "3px",
                   display: "inline-block",
                   paddingInline: "5px",
+                  fontWeight: "bold",
                 }}
               >
                 {round[player.playerId]?.guess !== undefined &&
@@ -126,7 +126,14 @@ const ScoreBoard = () => {
               borderTop: "2px solid grey",
             }}
           >
-            <TableCell align="center" style={{ padding: "6px" }}>
+            <TableCell
+              align="center"
+              style={{
+                padding: "6px",
+                border: "1px solid grey",
+                fontWeight: "bold",
+              }}
+            >
               Összesen
             </TableCell>
             {players.map((player, index) => {

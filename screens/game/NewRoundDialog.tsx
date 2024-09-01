@@ -49,7 +49,7 @@ const NewRoundDialog = ({
 
     return (
       <div key={"guess_" + index} className="inputLine">
-        {player.playerName}:
+        <div style={{ marginBottom: "6px" }}>{player.playerName}:</div>
         <TextField
           label="Tipp"
           variant="outlined"
@@ -81,6 +81,7 @@ const NewRoundDialog = ({
           padding: "20px",
           justifyContent: "center",
           alignContent: "center",
+          overflow: "auto",
         }}
       >
         <DialogTitle align="center" variant="h3">
