@@ -33,9 +33,7 @@ const GamePageLayout = () => {
   const [openNewRoundDialog, setOpenNewRoundDialog] = useState(false);
   const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
-  const handleOpenNewRound = (open: boolean) => {
-    setOpenEndRoundDialog(open);
-  };
+  const handleOpenNewRound = (open: boolean) => {};
 
   useEffect(() => {
     dispatch(storeAutoSave({ gameId, players, rounds, currentRound, state }));
@@ -89,7 +87,7 @@ const GamePageLayout = () => {
           </Button>
           <NewRoundDialog
             open={openNewRoundDialog}
-            setOpen={handleOpenNewRound}
+            setOpen={setOpenNewRoundDialog}
             game={{ gameId, players, rounds, currentRound }}
           />
         </>
@@ -107,7 +105,7 @@ const GamePageLayout = () => {
           </Button>
           <EndRoundDialog
             open={openEndRoundDialog}
-            setOpen={handleOpenNewRound}
+            setOpen={setOpenEndRoundDialog}
             game={{ gameId, players, rounds, currentRound }}
           />
         </>
