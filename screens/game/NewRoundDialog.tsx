@@ -16,16 +16,27 @@ const NewRoundDialog = ({
   game: game;
 }) => {
   const dispatch = useDispatch();
+  var roundIndex = findIndex(game.rounds, {
+    roundId: game.currentRound,
+  });
+  var checkIfIncorrect = () => {
+    var bool = false;
+    game.players.forEach((player) => {
+      const guess = game.rounds[roundIndex][player.playerId].guess;
+      if (guess === undefined || guess < 0 || guess > 20) {
+        bool = true;
+      }
+    });
+    return bool;
+  };
 
   const InputLine = ({ player, index }: { player: player; index: number }) => {
-    var roundIndex = findIndex(game.rounds, {
-      roundId: game.currentRound,
-    });
     const [value, setValue] = useState(
       game.rounds[roundIndex][player.playerId].guess === undefined
         ? ""
         : game.rounds[roundIndex][player.playerId].guess
     );
+
     return (
       <div key={"guess_" + index}>
         {player.playerName}:
@@ -34,13 +45,17 @@ const NewRoundDialog = ({
           variant="outlined"
           type="number"
           value={value}
+          InputProps={{ inputProps: { min: 0, max: 20 } }}
+          error={
+            value !== undefined && (Number(value) < 0 || Number(value) > 20)
+          }
           onChange={(e) => setValue(e.target.value)}
           onBlur={(e) => {
             dispatch(
               storeRoundChanges({
                 roundId: game.currentRound || 1,
                 playerId: player.playerId,
-                guess: Number(value),
+                guess: value === undefined ? value : Number(value),
               })
             );
           }}
@@ -69,6 +84,7 @@ const NewRoundDialog = ({
         })}
         <Button
           variant="contained"
+          disabled={checkIfIncorrect()}
           onClick={() => {
             setOpen(false);
             dispatch(storeGameStateChange("playing"));
