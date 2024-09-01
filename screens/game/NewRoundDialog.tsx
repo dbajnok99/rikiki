@@ -16,13 +16,14 @@ const NewRoundDialog = ({
   game: game;
 }) => {
   const dispatch = useDispatch();
-  var roundIndex = findIndex(game.rounds, {
-    roundId: game.currentRound,
-  });
+
   var checkIfIncorrect = () => {
+    var roundIndex = findIndex(game.rounds, {
+      roundId: game.currentRound,
+    });
     var bool = false;
     game.players.forEach((player) => {
-      const guess = game.rounds[roundIndex][player.playerId].guess;
+      const guess = game.rounds[roundIndex]?.[player.playerId]?.guess;
       if (guess === undefined || guess < 0 || guess > 20) {
         bool = true;
       }
@@ -31,8 +32,17 @@ const NewRoundDialog = ({
   };
 
   const InputLine = ({ player, index }: { player: player; index: number }) => {
+    var roundIndex = findIndex(game.rounds, {
+      roundId: game.currentRound,
+    });
+    console.log(
+      "game.rounds[roundIndex]?.[player.playerId]?.guess = ",
+      game.rounds[roundIndex]?.[player.playerId]?.guess
+    );
+    console.log("player", player.playerId);
+    console.log("roundIndex", roundIndex);
     const [value, setValue] = useState(
-      game.rounds[roundIndex][player.playerId].guess === undefined
+      game.rounds[roundIndex]?.[player.playerId]?.guess === undefined
         ? ""
         : game.rounds[roundIndex][player.playerId].guess
     );

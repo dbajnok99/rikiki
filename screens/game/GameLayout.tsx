@@ -33,8 +33,6 @@ const GamePageLayout = () => {
   const [openNewRoundDialog, setOpenNewRoundDialog] = useState(false);
   const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
-  const handleOpenNewRound = (open: boolean) => {};
-
   useEffect(() => {
     dispatch(storeAutoSave({ gameId, players, rounds, currentRound, state }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,6 +57,7 @@ const GamePageLayout = () => {
             variant="contained"
             onClick={() => {
               dispatch(storeGameStateChange("ready to guess"));
+              dispatch(storeNewRound(1));
             }}
           >
             Játék kezdése
@@ -79,7 +78,9 @@ const GamePageLayout = () => {
           <Button
             variant="contained"
             onClick={() => {
-              dispatch(storeNewRound((currentRound || 0) + 1));
+              if (currentRound !== undefined && currentRound > 1) {
+                dispatch(storeNewRound(currentRound));
+              }
               setOpenNewRoundDialog(true);
             }}
           >

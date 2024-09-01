@@ -1,7 +1,11 @@
 import { Button, Dialog, DialogTitle, TextField } from "@mui/material";
 import { game } from "../global.types";
 import { useState } from "react";
-import { storeGameStateChange, storeRoundChanges } from "./GameSlice";
+import {
+  storeGameStateChange,
+  storeRoundChanges,
+  storeUpdateCurrentRound,
+} from "./GameSlice";
 import { useDispatch } from "react-redux";
 import { findIndex } from "lodash";
 import { player } from "../global.types";
@@ -23,7 +27,7 @@ const EndRoundDialog = ({
   var checkIfIncorrect = () => {
     var bool = false;
     game.players.forEach((player) => {
-      const result = game.rounds[roundIndex][player.playerId].result;
+      const result = game.rounds[roundIndex]?.[player.playerId]?.result;
       if (result === undefined || result < 0 || result > 20) {
         bool = true;
       }
@@ -32,7 +36,7 @@ const EndRoundDialog = ({
   };
   const InputLine = ({ player, index }: { player: player; index: number }) => {
     const [value, setValue] = useState(
-      game.rounds[roundIndex][player.playerId].result === undefined
+      game.rounds[roundIndex]?.[player.playerId]?.result === undefined
         ? ""
         : game.rounds[roundIndex][player.playerId].result
     );
@@ -62,6 +66,7 @@ const EndRoundDialog = ({
       </div>
     );
   };
+
   return (
     <Dialog open={open}>
       <div
@@ -86,6 +91,7 @@ const EndRoundDialog = ({
           onClick={() => {
             setOpen(false);
             dispatch(storeGameStateChange("end of round"));
+            dispatch(storeUpdateCurrentRound((game.currentRound || 0) + 1));
           }}
         >
           Befejezés

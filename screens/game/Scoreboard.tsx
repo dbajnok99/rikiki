@@ -22,16 +22,12 @@ const ScoreBoard = () => {
     round: round;
     player: player;
   }) => {
-    if (
-      round[player.playerId].guess !== undefined &&
-      round[player.playerId].result !== undefined
-    ) {
-      return round[player.playerId].guess == round[player.playerId].result
-        ? 10
-        : Math.abs(
-            (round[player.playerId].guess || 0) -
-              (round[player.playerId].result || 0)
-          ) * -2;
+    const guess = round[player.playerId].guess;
+    const result = round[player.playerId].result;
+    if (guess !== undefined && result !== undefined) {
+      return guess == result
+        ? 10 + guess * 2
+        : Math.abs((guess || 0) - (result || 0)) * -2;
     } else {
       return 0;
     }

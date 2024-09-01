@@ -24,7 +24,7 @@ export default function Home() {
         gameId: newId,
         players: [],
         rounds: [],
-        currentRound: 0,
+        currentRound: 1,
         state: "setup",
       })
     );
@@ -33,7 +33,7 @@ export default function Home() {
         gameId: newId,
         players: [],
         rounds: [],
-        currentRound: 0,
+        currentRound: 1,
         state: "setup",
       })
     );

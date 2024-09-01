@@ -50,6 +50,8 @@ const GameSlice = createSlice({
           result: undefined,
         };
       });
+    },
+    storeUpdateCurrentRound: (state, { payload }: PayloadAction<number>) => {
       state.currentRound = payload;
     },
     storeRoundChanges: (
@@ -82,6 +84,7 @@ export const {
   storeRoundChanges,
   storeNewRound,
   storeGameStateChange,
+  storeUpdateCurrentRound,
 } = GameSlice.actions;
 
 export default GameSlice.reducer;
