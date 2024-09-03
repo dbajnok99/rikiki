@@ -27,7 +27,10 @@ function MyApp({
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <Head>
+          <title>Rikiki</title>
+          <meta name="description" content="Rikiki számláló applikáció" />
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
