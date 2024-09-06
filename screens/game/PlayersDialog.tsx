@@ -24,6 +24,16 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
     (state: RootState) => state.Game
   );
 
+  const getInitialValues = () => {
+    var result: {
+      [key: number]: string | undefined;
+    } = {};
+    players.forEach((player) => {
+      result[player.playerId] = player.playerName;
+    });
+    return result;
+  };
+
   const checkIfCorrect = () => {
     var names: (string | undefined)[] = [];
     var bool = true;
@@ -45,7 +55,7 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
 
   const [inputValues, setInputValues] = useState<{
     [key: number]: string | undefined;
-  }>({});
+  }>(getInitialValues());
 
   const handleInputChange = ({
     playerId,
@@ -112,6 +122,7 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
           padding: "20px",
           justifyContent: "center",
           alignContent: "center",
+          overflow: "auto",
         }}
       >
         <DialogTitle align="center" variant="h3">

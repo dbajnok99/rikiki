@@ -10,6 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { calculateScore } from "@/lib/functions";
 import { RootState } from "@/app/store";
+import { findIndex } from "lodash";
 
 const EndRoundDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const dispatch = useDispatch();
@@ -17,6 +18,17 @@ const EndRoundDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const { players, currentRound, rounds } = useSelector(
     (state: RootState) => state.Game
   );
+
+  const getInitialValues = () => {
+    var result: {
+      [key: number]: number | undefined;
+    } = {};
+    var index = findIndex(rounds, { roundId: currentRound });
+    players.forEach((player) => {
+      result[player.playerId] = rounds[index]?.[player.playerId]?.result;
+    });
+    return result;
+  };
 
   const [inputValues, setInputValues] = useState<{
     [key: number]: number | undefined;

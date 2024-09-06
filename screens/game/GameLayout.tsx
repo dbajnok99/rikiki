@@ -19,14 +19,13 @@ const GamePageLayout = () => {
     (state: RootState) => state.Game
   );
 
-  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(state == "setup");
   const [openNewRoundDialog, setOpenNewRoundDialog] = useState(false);
   const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
   useEffect(() => {
     dispatch(storeAutoSave({ gameId, players, rounds, currentRound, state }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [currentRound, dispatch, gameId, players, rounds, state]);
 
   return (
     <main>

@@ -3,12 +3,24 @@ import { useState } from "react";
 import { storeGameStateChange, storeGuesses } from "./GameSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { findIndex } from "lodash";
 
 const NewRoundDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const dispatch = useDispatch();
-  const { players, currentRound } = useSelector(
+  const { players, currentRound, rounds } = useSelector(
     (state: RootState) => state.Game
   );
+
+  const getInitialValues = () => {
+    var result: {
+      [key: number]: number | undefined;
+    } = {};
+    var index = findIndex(rounds, { roundId: currentRound });
+    players.forEach((player) => {
+      result[player.playerId] = rounds[index]?.[player.playerId]?.guess;
+    });
+    return result;
+  };
 
   const [inputValues, setInputValues] = useState<{
     [key: number]: number | undefined;

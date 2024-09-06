@@ -102,8 +102,9 @@ const GameSlice = createSlice({
     ) => {
       var index = findIndex(state.rounds, { roundId: payload.roundId });
       for (const [key, value] of Object.entries(payload.inputValues)) {
-        if (value !== undefined)
+        if (value !== undefined) {
           state.rounds[index][Number(key)].result = value;
+        }
       }
     },
   },
