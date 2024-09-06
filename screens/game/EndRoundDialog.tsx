@@ -4,69 +4,46 @@ import { useState } from "react";
 import {
   storeChangePlayerData,
   storeGameStateChange,
-  storeRoundChanges,
+  storeResults,
   storeUpdateCurrentRound,
 } from "./GameSlice";
-import { useDispatch } from "react-redux";
-import { findIndex } from "lodash";
-import { player } from "../global.types";
+import { useDispatch, useSelector } from "react-redux";
 import { calculateScore } from "@/lib/functions";
+import { RootState } from "@/app/store";
 
-const EndRoundDialog = ({
-  open,
-  setOpen,
-  game,
-}: {
-  open: boolean;
-  setOpen: any;
-  game: game;
-}) => {
+const EndRoundDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const dispatch = useDispatch();
 
-  var roundIndex = findIndex(game.rounds, {
-    roundId: game.currentRound,
-  });
+  const { players, currentRound, rounds } = useSelector(
+    (state: RootState) => state.Game
+  );
+
+  const [inputValues, setInputValues] = useState<{
+    [key: number]: number | undefined;
+  }>({});
+
   var checkIfIncorrect = () => {
     var bool = false;
-    game.players.forEach((player) => {
-      const result = game.rounds[roundIndex]?.[player.playerId]?.result;
-      if (result === undefined || result < 0 || result > 20) {
+    players.forEach((player) => {
+      const guess = inputValues[player.playerId];
+      if (guess === undefined || guess < 0 || guess > 20) {
         bool = true;
       }
     });
     return bool;
   };
-  const InputLine = ({ player, index }: { player: player; index: number }) => {
-    const [value, setValue] = useState(
-      game.rounds[roundIndex]?.[player.playerId]?.result === undefined
-        ? ""
-        : game.rounds[roundIndex][player.playerId].result
-    );
-    return (
-      <div key={"guess_" + index} className="inputLine">
-        <div style={{ marginBottom: "6px" }}>{player.playerName}:</div>
-        <TextField
-          label="Ütés"
-          variant="outlined"
-          type="number"
-          value={value}
-          slotProps={{ input: { inputProps: { min: 0, max: 20 } } }}
-          error={
-            value !== undefined && (Number(value) < 0 || Number(value) > 20)
-          }
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={(e) => {
-            dispatch(
-              storeRoundChanges({
-                roundId: game.currentRound || 1,
-                playerId: player.playerId,
-                result: Number(value),
-              })
-            );
-          }}
-        />
-      </div>
-    );
+
+  const handleInputChange = ({
+    playerId,
+    value,
+  }: {
+    playerId: number;
+    value?: number;
+  }) => {
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [playerId]: value,
+    }));
   };
 
   return (
@@ -83,10 +60,32 @@ const EndRoundDialog = ({
           Kör vége
         </DialogTitle>
         Kérlek add meg ki mennyit ütött:
-        {game.players.map((player, index) => {
+        {players.map((player, index) => {
           return (
             <div key={"resultInputLine_" + index}>
-              <InputLine player={player} index={index} />
+              <div key={"guess_" + index} className="inputLine">
+                <div style={{ marginBottom: "6px" }}>{player.playerName}:</div>
+                <TextField
+                  label="Ütés"
+                  variant="outlined"
+                  type="number"
+                  value={inputValues[player.playerId]}
+                  slotProps={{ input: { inputProps: { min: 0, max: 20 } } }}
+                  error={
+                    inputValues[player.playerId] !== undefined &&
+                    (Number(inputValues[player.playerId]) < 0 ||
+                      Number(inputValues[player.playerId]) > 20)
+                  }
+                  onChange={(e) =>
+                    handleInputChange({
+                      playerId: player.playerId,
+                      value: e.target.value
+                        ? Number(e.target.value)
+                        : undefined,
+                    })
+                  }
+                />
+              </div>
             </div>
           );
         })}
@@ -99,15 +98,21 @@ const EndRoundDialog = ({
             onClick={() => {
               setOpen(false);
               dispatch(storeGameStateChange("end of round"));
-              dispatch(storeUpdateCurrentRound((game.currentRound || 0) + 1));
-              game.players.forEach((player) => {
+              dispatch(storeUpdateCurrentRound((currentRound || 0) + 1));
+              dispatch(
+                storeResults({
+                  roundId: currentRound || 0,
+                  inputValues: inputValues,
+                })
+              );
+              players.forEach((player) => {
                 dispatch(
                   storeChangePlayerData({
                     playerId: player.playerId,
                     playerName: player.playerName,
                     score: calculateScore({
                       player: player,
-                      rounds: game.rounds,
+                      rounds: rounds,
                     }),
                   })
                 );

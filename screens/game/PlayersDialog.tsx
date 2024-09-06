@@ -1,4 +1,3 @@
-import { player } from "@/screens/global.types";
 import {
   TextField,
   IconButton,
@@ -12,46 +11,77 @@ import { storeUpdateGame } from "../GlobalSlice";
 import {
   storeNewPlayer,
   storeDeletePlayer,
-  storeChangePlayerData,
+  storeChangePlayerNames,
 } from "./GameSlice";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { game } from "../global.types";
+import { RootState } from "@/app/store";
+import { uniqBy } from "lodash";
 
-const PlayersDialog = ({
-  open,
-  setOpen,
-  correct,
-  game,
-}: {
-  open: boolean;
-  setOpen: any;
-  correct: boolean;
-  game: game;
-}) => {
+const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const dispatch = useDispatch();
+  const { gameId, players, rounds } = useSelector(
+    (state: RootState) => state.Game
+  );
+
+  const checkIfCorrect = () => {
+    var names: (string | undefined)[] = [];
+    var bool = true;
+    players.forEach((player) => {
+      const name = inputValues[player.playerId];
+      if (name === undefined) {
+        bool = false;
+      }
+      names.push(name);
+    });
+    if (
+      names.length < 2 ||
+      uniqBy(names, (name) => name).length != names.length
+    ) {
+      bool = false;
+    }
+    return bool;
+  };
+
+  const [inputValues, setInputValues] = useState<{
+    [key: number]: string | undefined;
+  }>({});
+
+  const handleInputChange = ({
+    playerId,
+    value,
+  }: {
+    playerId: number;
+    value?: string;
+  }) => {
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [playerId]: value,
+    }));
+  };
 
   const handleClose = () => {
     setOpen(false);
+    dispatch(storeChangePlayerNames(inputValues));
     dispatch(
       storeUpdateGame({
-        gameId: game.gameId,
-        players: game.players,
-        rounds: game.rounds,
+        gameId: gameId,
+        players: players,
+        rounds: rounds,
       })
     );
   };
 
   const getHighestPlayerId = () => {
-    return game.players.length != 0
-      ? game.players.reduce((max, player) => {
+    return players.length != 0
+      ? players.reduce((max, player) => {
           return player.playerId > max.playerId ? player : max;
-        }, game.players[0]).playerId + 1
+        }, players[0]).playerId + 1
       : 2;
   };
 
   const newLine = () => {
-    if (game.players.length == 0) {
+    if (players.length == 0) {
       dispatch(
         storeNewPlayer({
           playerId: 1,
@@ -70,50 +100,11 @@ const PlayersDialog = ({
   };
 
   const deleteLine = (id: number) => {
-    if (game.players.length > 0) {
+    if (players.length > 0) {
       dispatch(storeDeletePlayer(id));
     }
   };
 
-  const InputLine = ({ player, index }: { player: player; index: number }) => {
-    const [value, setValue] = useState(player.playerName);
-
-    return (
-      <div
-        className="inputLine"
-        style={{ marginBlock: "5px" }}
-        key={"test_" + index}
-      >
-        {index + 1 || 1}.
-        <div>
-          <TextField
-            label="Név"
-            variant="outlined"
-            style={{ width: "80%" }}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onBlur={(e) =>
-              dispatch(
-                storeChangePlayerData({
-                  playerId: player.playerId,
-                  playerName: e.target.value,
-                  score: 0,
-                })
-              )
-            }
-          />
-          <IconButton
-            aria-label="törlés"
-            color="error"
-            onClick={() => deleteLine(player.playerId)}
-            disabled={game.players.length < 2}
-          >
-            <DeleteForeverIcon />
-          </IconButton>
-        </div>
-      </div>
-    );
-  };
   return (
     <Dialog open={open}>
       <div
@@ -127,19 +118,72 @@ const PlayersDialog = ({
           Új játék kezdése
         </DialogTitle>
         Játékosok hozzáadása:
-        {game.players.length == 0 ? (
+        {players.length == 0 ? (
           <div key={0}>
-            <InputLine
-              player={{ playerId: 1, playerName: "", score: 0 }}
-              index={0}
-            />
+            <div
+              className="inputLine"
+              style={{ marginBlock: "5px" }}
+              key={"test_" + 0}
+            >
+              1.
+              <div>
+                <TextField
+                  label="Név"
+                  variant="outlined"
+                  style={{ width: "80%" }}
+                  value={inputValues[1]}
+                  onChange={(e) =>
+                    handleInputChange({
+                      playerId: 1,
+                      value: e.target.value ? e.target.value : undefined,
+                    })
+                  }
+                />
+                <IconButton
+                  aria-label="törlés"
+                  color="error"
+                  onClick={() => deleteLine(1)}
+                  disabled={players.length < 2}
+                >
+                  <DeleteForeverIcon />
+                </IconButton>
+              </div>
+            </div>
           </div>
         ) : (
           <></>
         )}
-        {game.players.map((player, index) => (
+        {players.map((player, index) => (
           <div key={index}>
-            <InputLine player={player} index={index} />
+            <div
+              className="inputLine"
+              style={{ marginBlock: "5px" }}
+              key={"test_" + index}
+            >
+              {index + 1 || 1}.
+              <div>
+                <TextField
+                  label="Név"
+                  variant="outlined"
+                  style={{ width: "80%" }}
+                  value={inputValues[player.playerId]}
+                  onChange={(e) =>
+                    handleInputChange({
+                      playerId: player.playerId,
+                      value: e.target.value ? e.target.value : undefined,
+                    })
+                  }
+                />
+                <IconButton
+                  aria-label="törlés"
+                  color="error"
+                  onClick={() => deleteLine(player.playerId)}
+                  disabled={players.length < 2}
+                >
+                  <DeleteForeverIcon />
+                </IconButton>
+              </div>
+            </div>
           </div>
         ))}
         <Button
@@ -155,7 +199,11 @@ const PlayersDialog = ({
         <div
           style={{ display: "flex", width: "100%", justifyContent: "center" }}
         >
-          <Button variant="contained" onClick={handleClose} disabled={!correct}>
+          <Button
+            variant="contained"
+            onClick={handleClose}
+            disabled={!checkIfCorrect()}
+          >
             Mentés
           </Button>
         </div>

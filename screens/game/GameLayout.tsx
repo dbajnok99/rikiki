@@ -2,7 +2,6 @@ import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
-import { uniqBy } from "lodash";
 import PlayersDialog from "./PlayersDialog";
 import ScoreBoard from "./Scoreboard";
 import NewRoundDialog from "./NewRoundDialog";
@@ -20,17 +19,7 @@ const GamePageLayout = () => {
     (state: RootState) => state.Game
   );
 
-  const checkIfCorrect = () => {
-    if (players.length < 2) return false;
-    players.forEach((player) => {
-      if (player.playerName == "") return false;
-    });
-    if (uniqBy(players, (player) => player.playerName).length != players.length)
-      return false;
-    return true;
-  };
-
-  const [openEditDialog, setOpenEditDialog] = useState(!checkIfCorrect());
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openNewRoundDialog, setOpenNewRoundDialog] = useState(false);
   const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
@@ -66,12 +55,7 @@ const GamePageLayout = () => {
           >
             Játék kezdése
           </Button>
-          <PlayersDialog
-            open={openEditDialog}
-            setOpen={setOpenEditDialog}
-            correct={checkIfCorrect()}
-            game={{ gameId, players, rounds }}
-          />
+          <PlayersDialog open={openEditDialog} setOpen={setOpenEditDialog} />
         </>
       ) : (
         <></>
@@ -94,7 +78,6 @@ const GamePageLayout = () => {
           <NewRoundDialog
             open={openNewRoundDialog}
             setOpen={setOpenNewRoundDialog}
-            game={{ gameId, players, rounds, currentRound }}
           />
         </>
       ) : (
@@ -113,7 +96,6 @@ const GamePageLayout = () => {
           <EndRoundDialog
             open={openEndRoundDialog}
             setOpen={setOpenEndRoundDialog}
-            game={{ gameId, players, rounds, currentRound }}
           />
         </>
       ) : (

@@ -41,6 +41,22 @@ const GameSlice = createSlice({
       var index = findIndex(state.players, { playerId: payload.playerId });
       state.players.splice(index, 1, payload);
     },
+
+    storeChangePlayerNames: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        [key: number]: string | undefined;
+      }>
+    ) => {
+      for (const [key, value] of Object.entries(payload)) {
+        if (value !== undefined) {
+          var index = findIndex(state.players, { playerId: Number(key) });
+          state.players[index].playerName = value;
+        }
+      }
+    },
     storeNewRound: (state, { payload }: PayloadAction<number>) => {
       var index = findIndex(state.rounds, { roundId: payload });
       if (index < 0) {
@@ -57,22 +73,38 @@ const GameSlice = createSlice({
     storeUpdateCurrentRound: (state, { payload }: PayloadAction<number>) => {
       state.currentRound = payload;
     },
-    storeRoundChanges: (
+    storeGuesses: (
       state,
       {
         payload,
       }: PayloadAction<{
         roundId: number;
-        playerId: number;
-        guess?: number;
-        result?: number;
+        inputValues: {
+          [key: number]: number | undefined;
+        };
       }>
     ) => {
       var index = findIndex(state.rounds, { roundId: payload.roundId });
-      if (payload.guess !== undefined)
-        state.rounds[index][payload.playerId].guess = payload.guess;
-      if (payload.result !== undefined)
-        state.rounds[index][payload.playerId].result = payload.result;
+      for (const [key, value] of Object.entries(payload.inputValues)) {
+        if (value !== undefined) state.rounds[index][Number(key)].guess = value;
+      }
+    },
+    storeResults: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        roundId: number;
+        inputValues: {
+          [key: number]: number | undefined;
+        };
+      }>
+    ) => {
+      var index = findIndex(state.rounds, { roundId: payload.roundId });
+      for (const [key, value] of Object.entries(payload.inputValues)) {
+        if (value !== undefined)
+          state.rounds[index][Number(key)].result = value;
+      }
     },
   },
 });
@@ -84,10 +116,12 @@ export const {
   storeNewPlayer,
   storeDeletePlayer,
   storeChangePlayerData,
-  storeRoundChanges,
+  storeGuesses,
+  storeResults,
   storeNewRound,
   storeGameStateChange,
   storeUpdateCurrentRound,
+  storeChangePlayerNames,
 } = GameSlice.actions;
 
 export default GameSlice.reducer;
