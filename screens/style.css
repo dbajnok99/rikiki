@@ -1,13 +1,5 @@
-.previousGameDiv {
-    border-radius: 5px;
-    border: 1px solid grey;
-    margin: 5px;
-    display: inline-flex;
-    padding: 3px;
-}
-
 .previousGameDiv:hover {
-    background-color: lightgrey;
+    background-color: #f5f5f5;
     cursor: pointer;
 }
 
@@ -16,4 +8,12 @@
     display: flex; 
     justify-content: center;
     flex-direction: column;
+}
+
+
+.playerStanding{
+    padding: 5px;
+    background-color: lightgray;
+    border-radius: 5px;
+    margin: 3px;
 }

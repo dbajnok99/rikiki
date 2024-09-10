@@ -100,6 +100,7 @@ const GamePageLayout = () => {
       ) : (
         <></>
       )}
+      <br />
 
       <ScoreBoard />
       <Standings />
