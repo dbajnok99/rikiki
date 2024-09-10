@@ -109,7 +109,6 @@ const EndRoundDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
             disabled={checkIfIncorrect()}
             onClick={() => {
               setOpen(false);
-              dispatch(storeGameStateChange("end of round"));
               dispatch(storeUpdateCurrentRound((currentRound || 0) + 1));
               dispatch(
                 storeResults({
@@ -117,18 +116,7 @@ const EndRoundDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
                   inputValues: inputValues,
                 })
               );
-              players.forEach((player) => {
-                dispatch(
-                  storeChangePlayerData({
-                    playerId: player.playerId,
-                    playerName: player.playerName,
-                    score: calculateScore({
-                      player: player,
-                      rounds: rounds,
-                    }),
-                  })
-                );
-              });
+              dispatch(storeGameStateChange("end of round"));
             }}
           >
             Befejezés

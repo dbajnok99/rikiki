@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { game, gameState, player, round } from "../global.types";
 import { filter, findIndex } from "lodash";
+import { calculateScore } from "@/lib/functions";
 const initialState: game = {
   gameId: 0,
   players: [],
@@ -107,6 +108,15 @@ const GameSlice = createSlice({
         }
       }
     },
+    storeScores: (state, { payload }: PayloadAction<undefined>) => {
+      state.players.forEach((player) => {
+        var index = findIndex(state.players, { playerId: player.playerId });
+        state.players[index].score = calculateScore({
+          player: player,
+          rounds: state.rounds,
+        });
+      });
+    },
   },
 });
 
@@ -123,6 +133,7 @@ export const {
   storeGameStateChange,
   storeUpdateCurrentRound,
   storeChangePlayerNames,
+  storeScores,
 } = GameSlice.actions;
 
 export default GameSlice.reducer;

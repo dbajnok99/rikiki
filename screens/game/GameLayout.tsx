@@ -12,7 +12,7 @@ import {
 import PlayersDialog from "./PlayersDialog";
 import ScoreBoard from "./Scoreboard";
 import NewRoundDialog from "./NewRoundDialog";
-import { storeGameStateChange, storeNewRound } from "./GameSlice";
+import { storeGameStateChange, storeNewRound, storeScores } from "./GameSlice";
 import EndRoundDialog from "./EndRoundDialog";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/router";
@@ -32,6 +32,7 @@ const GamePageLayout = () => {
   const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
   useEffect(() => {
+    if (state == "end of round") dispatch(storeScores());
     dispatch(storeAutoSave({ gameId, players, rounds, currentRound, state }));
   }, [currentRound, dispatch, gameId, players, rounds, state]);
 
