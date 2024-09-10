@@ -46,9 +46,8 @@ const IndexLayout = () => {
       <Button variant="contained" onClick={newGame} sx={{ marginBlock: "3%" }}>
         Új játék
       </Button>
-      <div>
-        <PreviousGames />
-      </div>
+      <br />
+      <PreviousGames />
     </>
   );
 };
