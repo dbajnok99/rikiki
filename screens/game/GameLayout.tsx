@@ -1,7 +1,14 @@
 import { RootState } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import PlayersDialog from "./PlayersDialog";
 import ScoreBoard from "./Scoreboard";
 import NewRoundDialog from "./NewRoundDialog";
@@ -20,6 +27,7 @@ const GamePageLayout = () => {
   );
 
   const [openEditDialog, setOpenEditDialog] = useState(state == "setup");
+  const [openEndGameDialog, setOpenEndGameDialog] = useState(false);
   const [openNewRoundDialog, setOpenNewRoundDialog] = useState(false);
   const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
@@ -78,6 +86,45 @@ const GamePageLayout = () => {
             open={openNewRoundDialog}
             setOpen={setOpenNewRoundDialog}
           />
+          <Button
+            variant="contained"
+            color="error"
+            style={{ margin: "6px" }}
+            onClick={() => {
+              setOpenEndGameDialog(true);
+            }}
+          >
+            Játék befejezése
+          </Button>
+          <Dialog
+            open={openEndGameDialog}
+            onClose={() => setOpenEndGameDialog(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Játék befejezése?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Biztos, hogy be szeretnéd fejezni a játékot?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="outlined"
+                onClick={() => setOpenEndGameDialog(false)}
+              >
+                Mégse
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => dispatch(storeGameStateChange("end of game"))}
+              >
+                Biztos
+              </Button>
+            </DialogActions>
+          </Dialog>
         </>
       ) : (
         <></>

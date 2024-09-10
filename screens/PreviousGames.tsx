@@ -41,6 +41,15 @@ const PreviousGames: React.FC = () => {
     dispatch(storeGameData(games[index]));
     router.push("/game");
   };
+
+  const stateName = (state: string) => {
+    if (state == "setup") return "Előkészítés";
+    if (state == "ready to guess") return "Tippelés";
+    if (state == "playing") return "Játék folyamatban";
+    if (state == "end of round") return "Kör vége";
+    if (state == "end of game") return "Játék vége";
+  };
+
   return (
     <div key={"prevGames"} style={{ display: "inline-flex" }}>
       <TableContainer component={Paper}>
@@ -82,7 +91,7 @@ const PreviousGames: React.FC = () => {
                     padding: "6px",
                   }}
                 >
-                  {game.state}
+                  {stateName(game.state || "")}
                 </TableCell>
               </TableRow>
             ))}
