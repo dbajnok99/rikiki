@@ -18,12 +18,14 @@ const ScoreBoard = () => {
   const ScoreRow = ({ round }: { round: round }) => {
     return (
       <>
-        {players.map((player, index) => {
+        {players.map((player) => {
           const scoreChange = calculateScorediff({ round, player });
+          const guess = round[player.playerId]?.guess;
+          const result = round[player.playerId]?.result;
           return (
             <TableCell
               align="center"
-              key={"rowCell" + index + "_" + player.playerId}
+              key={`rowCell_${player.playerId}`}
               style={{
                 border: "1px solid grey",
                 padding: "6px",
@@ -36,9 +38,7 @@ const ScoreBoard = () => {
                   paddingInline: "5px",
                 }}
               >
-                {round[player.playerId]?.guess !== undefined
-                  ? "Tipp:" + round[player.playerId]?.guess
-                  : ""}
+                {guess !== undefined ? `Tipp:${guess}` : ""}
               </div>
               <br />
               <div
@@ -48,9 +48,7 @@ const ScoreBoard = () => {
                   paddingInline: "5px",
                 }}
               >
-                {round[player.playerId]?.result !== undefined
-                  ? "Ütés:" + round[player.playerId]?.result
-                  : ""}
+                {result !== undefined ? `Ütés:${result}` : ""}
               </div>
               <br />
               <div
@@ -62,10 +60,9 @@ const ScoreBoard = () => {
                   fontWeight: "bold",
                 }}
               >
-                {round[player.playerId]?.guess !== undefined &&
-                round[player.playerId]?.result !== undefined
+                {guess !== undefined && result !== undefined
                   ? scoreChange > 0
-                    ? "+" + scoreChange
+                    ? `+${scoreChange}`
                     : scoreChange
                   : ""}
               </div>
@@ -84,18 +81,17 @@ const ScoreBoard = () => {
             <TableRow>
               <TableCell
                 align="center"
-                key={"headerCell"}
                 style={{
                   border: "1px solid grey",
                   fontWeight: "bold",
                   padding: "6px",
                 }}
-              ></TableCell>
-              {players.map((player, index) => {
+              />
+              {players.map((player) => {
                 return (
                   <TableCell
                     align="center"
-                    key={"headerCell" + index}
+                    key={`headerCell_${player.playerId}`}
                     style={{
                       border: "1px solid grey",
                       fontWeight: "bold",
@@ -137,18 +133,18 @@ const ScoreBoard = () => {
               >
                 Összesen
               </TableCell>
-              {players.map((player, index) => {
+              {players.map((player) => {
                 return (
                   <TableCell
                     align="center"
-                    key={"headerCell" + index}
+                    key={`totalCell_${player.playerId}`}
                     style={{
                       border: "1px solid grey",
                       fontWeight: "bold",
                       padding: "6px",
                     }}
                   >
-                    {calculateScore({ player: player, rounds: rounds })}
+                    {calculateScore({ player, rounds })}
                   </TableCell>
                 );
               })}

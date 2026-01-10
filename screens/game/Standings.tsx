@@ -37,7 +37,7 @@ const Standings = () => {
           <TableBody>
             {orderedPlayers.map((player, index) => {
               return (
-                <TableRow key={index + "leaderboard_row"}>
+                <TableRow key={`leaderboard_row_${player.playerId}`}>
                   <TableCell
                     align="center"
                     style={{

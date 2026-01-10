@@ -10,12 +10,11 @@ export const calculateScorediff = ({
   const guess = round[player.playerId]?.guess;
   const result = round[player.playerId]?.result;
   if (guess !== undefined && result !== undefined) {
-    return guess == result
+    return guess === result
       ? 10 + guess * 2
       : Math.abs((guess || 0) - (result || 0)) * -2;
-  } else {
-    return 0;
   }
+  return 0;
 };
 
 export const calculateScore = ({
@@ -25,7 +24,7 @@ export const calculateScore = ({
   player: player;
   rounds: round[];
 }) => {
-  var result: number = 0;
+  let result = 0;
   rounds.forEach((round) => {
     result += calculateScorediff({ round, player });
   });

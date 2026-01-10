@@ -18,14 +18,20 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { RootState } from "@/app/store";
 import { uniqBy } from "lodash";
 
-const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
+const PlayersDialog = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => {
   const dispatch = useDispatch();
   const { gameId, players, rounds } = useSelector(
     (state: RootState) => state.Game
   );
 
   const getInitialValues = () => {
-    var result: {
+    const result: {
       [key: number]: string | undefined;
     } = {};
     players.forEach((player) => {
@@ -35,22 +41,22 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   };
 
   const checkIfCorrect = () => {
-    var names: (string | undefined)[] = [];
-    var bool = true;
+    const names: (string | undefined)[] = [];
+    let isValid = true;
     players.forEach((player) => {
       const name = inputValues[player.playerId];
       if (name === undefined) {
-        bool = false;
+        isValid = false;
       }
       names.push(name);
     });
     if (
       names.length < 2 ||
-      uniqBy(names, (name) => name).length != names.length
+      uniqBy(names, (name) => name).length !== names.length
     ) {
-      bool = false;
+      isValid = false;
     }
-    return bool;
+    return isValid;
   };
 
   const [inputValues, setInputValues] = useState<{
@@ -83,7 +89,7 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   };
 
   const getHighestPlayerId = () => {
-    return players.length != 0
+    return players.length !== 0
       ? players.reduce((max, player) => {
           return player.playerId > max.playerId ? player : max;
         }, players[0]).playerId + 1
@@ -91,7 +97,7 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   };
 
   const newLine = () => {
-    if (players.length == 0) {
+    if (players.length === 0) {
       dispatch(
         storeNewPlayer({
           playerId: 1,
@@ -129,7 +135,7 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
           Új játék kezdése
         </DialogTitle>
         Játékosok hozzáadása:
-        {players.length == 0 ? (
+        {players.length === 0 ? (
           <div key={0}>
             <div
               className="inputLine"
@@ -161,17 +167,15 @@ const PlayersDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
               </div>
             </div>
           </div>
-        ) : (
-          <></>
-        )}
+        ) : null}
         {players.map((player, index) => (
-          <div key={index}>
+          <div key={player.playerId}>
             <div
               className="inputLine"
               style={{ marginBlock: "5px" }}
               key={"test_" + index}
             >
-              {index + 1 || 1}.
+              {index + 1}.
               <div>
                 <TextField
                   label="Név"

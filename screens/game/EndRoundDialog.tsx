@@ -1,48 +1,39 @@
 import { Button, Dialog, DialogTitle, TextField } from "@mui/material";
-import { game } from "../global.types";
 import { useState } from "react";
 import {
-  storeChangePlayerData,
   storeGameStateChange,
   storeResults,
   storeUpdateCurrentRound,
 } from "./GameSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { calculateScore } from "@/lib/functions";
 import { RootState } from "@/app/store";
-import { findIndex } from "lodash";
 
-const EndRoundDialog = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
+const EndRoundDialog = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => {
   const dispatch = useDispatch();
 
-  const { players, currentRound, rounds } = useSelector(
+  const { players, currentRound } = useSelector(
     (state: RootState) => state.Game
   );
-
-  const getInitialValues = () => {
-    var result: {
-      [key: number]: number | undefined;
-    } = {};
-    var index = findIndex(rounds, { roundId: currentRound });
-    players.forEach((player) => {
-      result[player.playerId] = rounds[index]?.[player.playerId]?.result;
-    });
-    return result;
-  };
 
   const [inputValues, setInputValues] = useState<{
     [key: number]: number | undefined;
   }>({});
 
-  var checkIfIncorrect = () => {
-    var bool = false;
+  const checkIfIncorrect = () => {
+    let hasInvalidValues = false;
     players.forEach((player) => {
       const guess = inputValues[player.playerId];
       if (guess === undefined || guess < 0 || guess > 20) {
-        bool = true;
+        hasInvalidValues = true;
       }
     });
-    return bool;
+    return hasInvalidValues;
   };
 
   const handleInputChange = ({

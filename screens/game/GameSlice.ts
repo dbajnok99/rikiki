@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { game, gameState, player, round } from "../global.types";
 import { filter, findIndex } from "lodash";
 import { calculateScore } from "@/lib/functions";
+
 const initialState: game = {
   gameId: 0,
   players: [],
@@ -39,8 +40,10 @@ const GameSlice = createSlice({
       });
     },
     storeChangePlayerData: (state, { payload }: PayloadAction<player>) => {
-      var index = findIndex(state.players, { playerId: payload.playerId });
-      state.players.splice(index, 1, payload);
+      const index = findIndex(state.players, { playerId: payload.playerId });
+      if (index >= 0) {
+        state.players.splice(index, 1, payload);
+      }
     },
 
     storeChangePlayerNames: (
@@ -53,18 +56,20 @@ const GameSlice = createSlice({
     ) => {
       for (const [key, value] of Object.entries(payload)) {
         if (value !== undefined) {
-          var index = findIndex(state.players, { playerId: Number(key) });
-          state.players[index].playerName = value;
+          const index = findIndex(state.players, { playerId: Number(key) });
+          if (index >= 0) {
+            state.players[index].playerName = value;
+          }
         }
       }
     },
     storeNewRound: (state, { payload }: PayloadAction<number>) => {
-      var index = findIndex(state.rounds, { roundId: payload });
-      if (index < 0) {
+      const existingIndex = findIndex(state.rounds, { roundId: payload });
+      if (existingIndex < 0) {
         state.rounds.push({ roundId: payload });
-        var index = findIndex(state.rounds, { roundId: payload });
+        const roundIndex = state.rounds.length - 1;
         state.players.forEach((player) => {
-          state.rounds[index][player.playerId] = {
+          state.rounds[roundIndex][player.playerId] = {
             guess: undefined,
             result: undefined,
           };
@@ -85,7 +90,10 @@ const GameSlice = createSlice({
         };
       }>
     ) => {
-      var index = findIndex(state.rounds, { roundId: payload.roundId });
+      const index = findIndex(state.rounds, { roundId: payload.roundId });
+      if (index < 0) {
+        return;
+      }
       for (const [key, value] of Object.entries(payload.inputValues)) {
         if (value !== undefined) state.rounds[index][Number(key)].guess = value;
       }
@@ -101,18 +109,20 @@ const GameSlice = createSlice({
         };
       }>
     ) => {
-      var index = findIndex(state.rounds, { roundId: payload.roundId });
+      const index = findIndex(state.rounds, { roundId: payload.roundId });
+      if (index < 0) {
+        return;
+      }
       for (const [key, value] of Object.entries(payload.inputValues)) {
         if (value !== undefined) {
           state.rounds[index][Number(key)].result = value;
         }
       }
     },
-    storeScores: (state, { payload }: PayloadAction<undefined>) => {
-      state.players.forEach((player) => {
-        var index = findIndex(state.players, { playerId: player.playerId });
+    storeScores: (state) => {
+      state.players.forEach((player, index) => {
         state.players[index].score = calculateScore({
-          player: player,
+          player,
           rounds: state.rounds,
         });
       });

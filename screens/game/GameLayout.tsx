@@ -26,15 +26,20 @@ const GamePageLayout = () => {
     (state: RootState) => state.Game
   );
 
-  const [openEditDialog, setOpenEditDialog] = useState(state == "setup");
+  const [openEditDialog, setOpenEditDialog] = useState(state === "setup");
   const [openEndGameDialog, setOpenEndGameDialog] = useState(false);
   const [openNewRoundDialog, setOpenNewRoundDialog] = useState(false);
   const [openEndRoundDialog, setOpenEndRoundDialog] = useState(false);
 
   useEffect(() => {
-    if (state == "end of round") dispatch(storeScores());
+    if (state === "end of round") {
+      dispatch(storeScores());
+    }
     dispatch(storeAutoSave({ gameId, players, rounds, currentRound, state }));
   }, [currentRound, dispatch, gameId, players, rounds, state]);
+
+  const isSetup = state === "setup" || state === undefined;
+  const isRoundReady = state === "ready to guess" || state === "end of round";
 
   return (
     <main>
@@ -48,7 +53,7 @@ const GamePageLayout = () => {
         Vissza a főoldalra
       </Button>
       <br />
-      {state == "setup" || state == undefined ? (
+      {isSetup ? (
         <>
           <Button variant="contained" onClick={() => setOpenEditDialog(true)}>
             Szerkesztés
@@ -65,11 +70,9 @@ const GamePageLayout = () => {
           </Button>
           <PlayersDialog open={openEditDialog} setOpen={setOpenEditDialog} />
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
 
-      {["ready to guess", "end of round"].includes(state || "") ? (
+      {isRoundReady ? (
         <>
           <Button
             variant="contained"
@@ -127,11 +130,9 @@ const GamePageLayout = () => {
             </DialogActions>
           </Dialog>
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
 
-      {state == "playing" ? (
+      {state === "playing" ? (
         <>
           <Button
             variant="contained"
@@ -145,9 +146,7 @@ const GamePageLayout = () => {
             setOpen={setOpenEndRoundDialog}
           />
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
       <br />
 
       <ScoreBoard />

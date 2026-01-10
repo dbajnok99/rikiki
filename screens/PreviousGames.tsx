@@ -7,7 +7,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { findIndex } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,34 +19,33 @@ const PreviousGames: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const playerNames = (players: player[]) => {
-    var result: string = "";
-    if (!players) {
-      result = " ";
-    } else {
-      players.map((player, index) => {
-        if (index == 0) {
-          result += player.playerName;
-        } else {
-          result += ", " + player.playerName;
-        }
-      });
-    }
-    return result;
-  };
+  const playerNames = (players: player[]) =>
+    players.map((player) => player.playerName).join(", ");
 
   const loadGame = (id: number) => {
-    var index = findIndex(games, { gameId: id });
+    const index = findIndex(games, { gameId: id });
+    if (index < 0) {
+      return;
+    }
     dispatch(storeGameData(games[index]));
     router.push("/game");
   };
 
   const stateName = (state: string) => {
-    if (state == "setup") return "Előkészítés";
-    if (state == "ready to guess") return "Tippelés";
-    if (state == "playing") return "Játék folyamatban";
-    if (state == "end of round") return "Kör vége";
-    if (state == "end of game") return "Játék vége";
+    switch (state) {
+      case "setup":
+        return "Előkészítés";
+      case "ready to guess":
+        return "Tippelés";
+      case "playing":
+        return "Játék folyamatban";
+      case "end of round":
+        return "Kör vége";
+      case "end of game":
+        return "Játék vége";
+      default:
+        return "Ismeretlen";
+    }
   };
 
   return (
@@ -71,9 +69,9 @@ const PreviousGames: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {games.map((game, index) => (
+            {games.map((game) => (
               <TableRow
-                key={index + "previousGames_row"}
+                key={game.gameId}
                 onClick={() => loadGame(game.gameId)}
                 className="previousGameDiv"
               >

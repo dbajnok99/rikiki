@@ -21,12 +21,20 @@ const GlobalSlice = createSlice({
       state.games.push(payload);
     },
     storeUpdateGame: (state, { payload }: PayloadAction<game>) => {
-      var index = findIndex(state.games, { gameId: payload.gameId });
-      state.games.splice(index, 1, payload);
+      const index = findIndex(state.games, { gameId: payload.gameId });
+      if (index >= 0) {
+        state.games.splice(index, 1, payload);
+      } else {
+        state.games.push(payload);
+      }
     },
     storeAutoSave: (state, { payload }: PayloadAction<game>) => {
-      var index = findIndex(state.games, { gameId: payload.gameId });
-      state.games.splice(index, 1, payload);
+      const index = findIndex(state.games, { gameId: payload.gameId });
+      if (index >= 0) {
+        state.games.splice(index, 1, payload);
+      } else {
+        state.games.push(payload);
+      }
     },
   },
 });
