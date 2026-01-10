@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { storeGameData } from "./game/GameSlice";
 import { storeNewGame } from "./GlobalSlice";
 import { RootState } from "@/app/store";
+import { game } from "./global.types";
 
 const IndexLayout = () => {
   const { games } = useSelector((state: RootState) => state.Global);
@@ -19,7 +20,7 @@ const IndexLayout = () => {
   const newId = gameWithHighestID + 1;
 
   const newGame = () => {
-    const gameData = {
+    const gameData: game = {
       gameId: newId,
       players: [],
       rounds: [],
